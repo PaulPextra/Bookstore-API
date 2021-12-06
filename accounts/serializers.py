@@ -7,7 +7,16 @@ class CustomUserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ['first_name', 
+                  'last_name', 
+                  'username',  
+                  'password',
+                  'email',
+                  'phone', 
+                  'gender',
+                  'address',
+                  'is_active', 
+                  'date_joined']
     
 class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(max_length=200)
