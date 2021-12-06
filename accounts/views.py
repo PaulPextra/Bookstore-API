@@ -19,22 +19,23 @@ def add_user(request):
     
     """ Allows the user to be able to sign up on the platform """
 
-    if request.method=='POST':
+    if request.method == 'POST':
         
         serializer = CustomUserSerializer(data=request.data)
         
         if serializer.is_valid():
 
             # hash password
-            serializer.validated_data['password'] = make_password(serializer.validated_data['password']) #hash the given password
+            serializer.validated_data['password'] = make_password(serializer.validated_data['password']) # hash the given password
             
             user = User.objects.create(**serializer.validated_data)
             
-            serializer = CustomUserSerializer(user)
+            serializer_class = CustomUserSerializer(user)
+            
             data = {
                 'status'  : True,
                 'message' : 'Successful',
-                'data' : serializer.data
+                'data' : serializer_class.data
             }
 
             return Response(data, status=status.HTTP_201_CREATED)
@@ -56,16 +57,16 @@ def get_user(request):
     
     """Allows the admin to see all users (both admin and normal users) """
     
-    if request.method=='GET':
+    if request.method == 'GET':
         
         user = User.objects.filter(is_active=True)
     
-        serializer = CustomUserSerializer(user, many=True)
+        serializer_class = CustomUserSerializer(user, many=True)
         
         data = {
                 'status'  : True,
                 'message' : 'Successful',
-                'data' : serializer.data,
+                'data' : serializer_class.data,
             }
 
         return Response(data, status=status.HTTP_200_OK)
@@ -93,35 +94,35 @@ def profile(request):
 
         return Response(data, status=status.HTTP_404_NOT_FOUND)
 
-    if request.method=='GET':
+    if request.method == 'GET':
         
-        serializer = CustomUserSerializer(user)
+        serializer_class = CustomUserSerializer(user)
         
         data = {
             'status'  : True,
             'message' : 'Successful',
-            'data' : serializer.data,
+            'data' : serializer_class.data,
         }
 
         return Response(data, status=status.HTTP_200_OK)
 
     # Update the profile of the user
-    elif request.method=='PUT':
+    elif request.method == 'PUT':
         
-        serializer = CustomUserSerializer(user, data=request.data, partial=True) 
+        serializer_class = CustomUserSerializer(user, data=request.data, partial=True) 
 
-        if serializer.is_valid():
+        if serializer_class.is_valid():
             
-            if 'password' in serializer.validated_data.keys():
+            if 'password' in serializer_class.validated_data.keys():
                 
                 raise ValidationError(detail='Cannot change password with this view')
             
-            serializer.save()
+            serializer_class.save()
 
             data = {
                 'status'  : True,
                 'message' : 'Successful',
-                'data' : serializer.data,
+                'data' : serializer_class.data,
             }
 
             return Response(data, status=status.HTTP_201_CREATED)
@@ -130,13 +131,13 @@ def profile(request):
             data = {
                 'status'  : False,
                 'message' : 'Unsuccessful',
-                'error' : serializer.errors,
+                'error' : serializer_class.errors,
             }
 
             return Response(data, status=status.HTTP_400_BAD_REQUEST)
 
     # Delete the account
-    elif request.method=='DELETE':
+    elif request.method == 'DELETE':
         
         user.is_active = False
         
@@ -147,12 +148,12 @@ def profile(request):
             'message' : 'Deleted Successfully'
         }
 
-        return Response(data, status = status.HTTP_204_NO_CONTENT)
+        return Response(data, status=status.HTTP_204_NO_CONTENT)
 
 # Setup for user login
 @swagger_auto_schema(method='POST', request_body=openapi.Schema(
     type=openapi.TYPE_OBJECT, 
-    properties={
+    properties = {
         'username': openapi.Schema(type=openapi.TYPE_STRING, description='string'),
         'password': openapi.Schema(type=openapi.TYPE_STRING, description='string'),
     }
@@ -160,15 +161,15 @@ def profile(request):
 @api_view(['POST'])
 def user_login(request):
     
-    """Allows users to log in to the platform. Sends the jwt refresh and access tokens. Check settings for token life time."""
+    """Allows users to log in to the platform."""
     
-    if request.method=='POST':
+    if request.method == 'POST':
         
         user = authenticate(request, username=request.data['username'], password=request.data['password'])
         
         if user is not None:
             
-            if user.is_active==True:
+            if user.is_active == True:
                 
                 try:
 
@@ -219,17 +220,17 @@ def reset_password(request):
     
     user = request.user
     
-    if request.method=='POST':
+    if request.method == 'POST':
         
-        serializer = ChangePasswordSerializer(data=request.data)
+        serializer_class = ChangePasswordSerializer(data=request.data)
         
-        if serializer.is_valid():
+        if serializer_class.is_valid():
             
-            if check_password(serializer.validated_data['old_password'], user.password):
+            if check_password(serializer_class.validated_data['old_password'], user.password):
                 
-                if serializer.validate_new_password():
+                if serializer_class.validate_new_password():
                     
-                    user.set_password(serializer.validated_data['new_password'])
+                    user.set_password(serializer_class.validated_data['new_password'])
                     
                     user.save()
                     
@@ -260,7 +261,7 @@ def reset_password(request):
             
             data = {
                 'status'  : False,
-                'error': serializer.errors
+                'error': serializer_class.errors
             }
             
             return Response(data, status=status.HTTP_400_BAD_REQUEST)   
@@ -283,20 +284,20 @@ def user_detail(request, user_id):
 
         return Response(data, status=status.HTTP_404_NOT_FOUND)
 
-    if request.method=='GET':
+    if request.method == 'GET':
         
-        serializer = CustomUserSerializer(user)
+        serializer_class = CustomUserSerializer(user)
         
         data = {
                 'status'  : True,
                 'message' : 'Successful',
-                'data' : serializer.data,
+                'data' : serializer_class.data,
             }
 
         return Response(data, status=status.HTTP_200_OK)
 
-    # delete the account
-    elif request.method=='DELETE':
+    # Delete the account
+    elif request.method == 'DELETE':
         
         user.is_active = False
         

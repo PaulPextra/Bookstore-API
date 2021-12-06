@@ -1,8 +1,8 @@
 from django.db import models
 from category.models import Category
-
-def book_image_path(instance, filename):
-    return "book/images/{}".format(instance.title)
+from cloudinary.models import CloudinaryField
+# import cloudinary.uploader
+# import cloudinary.api
 
 class Book(models.Model):
     title = models.CharField(max_length=200)
@@ -12,7 +12,7 @@ class Book(models.Model):
     price = models.CharField(max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    image = models.ImageField(upload_to=book_image_path, blank=True, null=True)
+    image = CloudinaryField('image', null= True, blank=True)
     is_active = models.BooleanField(default=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, blank=True, null=True)
     
