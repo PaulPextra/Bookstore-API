@@ -11,6 +11,8 @@ whitenoise = "*"
 gunicorn = "*"
 psycopg2-binary = "*"
 cloudinary = "*"
+drf-yasg = "*"
+coreapi = "*"
 
 [dev-packages]
 
