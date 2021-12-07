@@ -3,6 +3,7 @@ from . import views
 from . models import Book
 
 urlpatterns = [
-    path('book_list/', views.book_list ),
-    path('book_detail/<int:book_id>/', views.book_detail),
+    path('books/', views.book_list ),
+    path('books/<int:book_id>/', views.search_by_id),
+    path('books/<str:book_author>/', views.search_by_author),
 ]

@@ -24,10 +24,10 @@ def book_list(request):
     
         
 @api_view(['GET'])
-def book_detail(request, book_id):
+def search_by_id(request, book_id):
     
     try:
-        book_obj = Book.objects.get(id=book_id)
+        book_obj = Book.objects.get(id=book_id,)
         
     except Book.DoesNotExist:
         
@@ -49,6 +49,28 @@ def book_detail(request, book_id):
 
         return Response(context, status=status.HTTP_200_OK)
     
-
-            
+@api_view(['GET'])
+def search_by_author(request, book_author):
     
+    try:
+        book_obj = Book.objects.get(author=book_author,)
+        
+    except Book.DoesNotExist:
+        
+        context = {
+            'status': False,
+            'message': 'Book does not exist.'
+        }
+        return Response(context, status=status.HTTP_400_BAD_REQUEST)
+    
+    if request.method == 'GET':
+        
+        serializer_class = BookDetailSerializer(book_obj, many=True)
+        
+        context = {
+            'status': True,
+            'message': 'Success',
+            'data': serializer_class.data
+        }
+
+        return Response(context, status=status.HTTP_200_OK)
