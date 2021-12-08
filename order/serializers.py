@@ -3,6 +3,14 @@ from .models import Order
 
 class OrderSerializer(serializers.ModelSerializer):
     customer = serializers.ReadOnlyField()
+    book_title = serializers.ReadOnlyField()
     class Meta:
         model = Order
-        fields = ['user','customer','book','quantity', 'unit_price','transaction_id', 'status']
+        fields = ['user',
+                  'customer',
+                  'book',
+                  'book_title',
+                  'quantity', 
+                  'unit_price',
+                  'transaction_id', 
+                  'status']

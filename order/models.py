@@ -28,6 +28,10 @@ class Order(models.Model):
     
     def __str__(self):
         return f"{self.book}"
-
+    @property
     def customer(self):
         return f'{self.user.first_name} {self.user.last_name}'
+    
+    @property
+    def book_title(self):
+        return f'{self.book.title}'
