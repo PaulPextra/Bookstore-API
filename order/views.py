@@ -18,6 +18,11 @@ User = get_user_model()
 def order_list(request):
     if request.method == 'GET':
         
+        user = request.user
+
+        if user.is_anonymous:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        
         order_obj = Order.objects.all().order_by('id')
         
         serializer_class = OrderSerializer(order_obj, many=True)

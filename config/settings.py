@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'bookstore.apps.BookstoreConfig',
     'category.apps.CategoryConfig',
     'order.apps.OrderConfig',
+    'cart.apps.CartConfig',
     'rest_framework',
     'drf_yasg',
     'coreapi',
@@ -164,12 +165,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Setting Cloudinary Configuration Parameters Globally
 
-# cloudinary.config( 
-#   cloud_name = os.getenv('cloud_name'), 
-#   api_key = os.getenv('api_key'), 
-#   api_secret = os.getenv('api_secret'),
-#   secure = os.getenv('secure')
-# )
+cloudinary.config( 
+  cloud_name = os.getenv('cloud_name'), 
+  api_key = os.getenv('api_key'), 
+  api_secret = os.getenv('api_secret'),
+  secure = os.getenv('secure')
+)
 
 # Setting the maximum length of the CloudinaryField
 CLOUDINARY = {

@@ -12,12 +12,22 @@ def generate_isbn():
     ISBN = "".join(value)
     return ISBN
 
+class Author(models.Model):
+    name = models.CharField(max_length=100)
+    about_author = models.TextField()
+    
+    class Meta:
+        ordering = ['-name']
+        
+    def __str__(self):
+        return f'{self.name}'
+    
 class Book(models.Model):
     title = models.CharField(max_length=200)
     
     description = models.CharField(max_length=250)
     
-    author = models.CharField(max_length=100)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
     
     publisher = models.CharField(max_length=200, 
                                  null=True, 
@@ -55,9 +65,13 @@ class Book(models.Model):
         
     def __str__(self):
         return f'{self.title}'
-    
+    @property
     def tag(self):
         return self.category.name
+    
+    @property
+    def author_name(self):
+        return self.author.name
     
     
     

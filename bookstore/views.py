@@ -50,10 +50,10 @@ def search_by_id(request, book_id):
         return Response(context, status=status.HTTP_200_OK)
     
 @api_view(['GET'])
-def search_by_author(request, book_author):
+def search_by_author(request, author):
     
     try:
-        book_obj = Book.objects.get(author=book_author,)
+        book_obj = Book.objects.get(author=author)
         
     except Book.DoesNotExist:
         

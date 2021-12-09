@@ -4,10 +4,11 @@ from . models import Book
 class BookSerializer(serializers.ModelSerializer):
     
     tag = serializers.ReadOnlyField()
+    author_name = serializers.ReadOnlyField()
     
     class Meta:
         model = Book
-        fields = ['id','title', 'author', 'tag', 'price', 'image'] 
+        fields = ['id','title', 'author', 'author_name', 'tag', 'price', 'image'] 
         
 class BookDetailSerializer(serializers.Serializer):
     title = serializers.CharField(max_length=200)

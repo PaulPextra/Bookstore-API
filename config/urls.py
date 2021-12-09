@@ -39,6 +39,7 @@ urlpatterns = [
     path('', include('bookstore.urls')),
     path('', include('category.urls')),
     path('', include('order.urls')),
+    path('', include('cart.urls')),
     # Documentation endpoints
     path('', schema_view.with_ui('swagger', cache_timeout=0),
          name='schema-swagger-ui'),

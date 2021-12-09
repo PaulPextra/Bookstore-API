@@ -1,24 +1,19 @@
 from django.contrib.auth import (get_user_model, 
                                  authenticate)
-
 from django.contrib.auth.signals import user_logged_in
 from django.contrib.auth.hashers import (make_password, 
                                          check_password)
-
 from . serializers import (CustomUserSerializer, 
                            ChangePasswordSerializer,
                            UserProfileSerializer)
-
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import (api_view, 
                                        authentication_classes, 
                                        permission_classes)
-
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import (IsAuthenticated, 
-                                        IsAdminUser)
-
+                                        IsAdminUser,)
 from rest_framework.exceptions import ValidationError
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
