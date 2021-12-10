@@ -6,7 +6,8 @@ class OrderSerializer(serializers.ModelSerializer):
     book_title = serializers.ReadOnlyField()
     class Meta:
         model = Order
-        fields = ['user',
+        fields = ['id',
+                  'user',
                   'customer',
                   'book',
                   'book_title',

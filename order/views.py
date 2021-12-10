@@ -60,8 +60,8 @@ def order_list(request):
             
             return Response(context, status=status.HTTP_400_BAD_REQUEST)
       
-@swagger_auto_schema(methods=['PUT', 'DELETE'], request_body=OrderSerializer())      
-@api_view(['GET', 'PUT', 'DELETE'])
+@swagger_auto_schema(methods=['DELETE'], request_body=OrderSerializer())      
+@api_view(['GET', 'DELETE'])
 @authentication_classes([BasicAuthentication])
 @permission_classes([IsAuthenticated])           
 def order_detail(request, order_id):
@@ -93,30 +93,30 @@ def order_detail(request, order_id):
         
         return Response(context, status=status.HTTP_200_OK)
     
-    elif request.method == 'PUT':
+    # elif request.method == 'PUT':
         
-        serializer_class = OrderSerializer(order_obj, data=request.data, partial=True) 
+    #     serializer_class = OrderSerializer(order_obj, data=request.data, partial=True) 
 
-        if serializer_class.is_valid():
+    #     if serializer_class.is_valid():
         
-            serializer_class.save()
+    #         serializer_class.save()
 
-            data = {
-                'status'  : True,
-                'message' : 'Successful',
-                'data' : serializer_class.data,
-            }
+    #         data = {
+    #             'status'  : True,
+    #             'message' : 'Successful',
+    #             'data' : serializer_class.data,
+    #         }
 
-            return Response(data, status=status.HTTP_202_ACCEPTED)
+    #         return Response(data, status=status.HTTP_202_ACCEPTED)
 
-        else:
-            data = {
-                'status'  : False,
-                'message' : 'Unsuccessful',
-                'error' : serializer_class.errors
-            }
+    #     else:
+    #         data = {
+    #             'status'  : False,
+    #             'message' : 'Unsuccessful',
+    #             'error' : serializer_class.errors
+    #         }
 
-            return Response(data, status = status.HTTP_400_BAD_REQUEST)
+    #         return Response(data, status = status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
         
