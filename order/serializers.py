@@ -3,15 +3,12 @@ from .models import Order
 
 class OrderSerializer(serializers.ModelSerializer):
     customer = serializers.ReadOnlyField()
-    book_title = serializers.ReadOnlyField()
+    cost = serializers.ReadOnlyField(source='get_price')
+    
     class Meta:
         model = Order
-        fields = ['id',
-                  'user',
-                  'customer',
+        fields = ['customer',
                   'book',
-                  'book_title',
                   'quantity', 
-                  'unit_price',
-                  'transaction_id', 
-                  'status']
+                  'order_no',
+                  'cost']

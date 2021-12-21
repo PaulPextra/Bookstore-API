@@ -1,5 +1,5 @@
 from . models import Category
-from . serializers import CategorySerializer
+from . serializers import CategoryDetailSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -7,8 +7,8 @@ from rest_framework.decorators import api_view
 @api_view(['GET'])
 def category(request):
     if request.method == 'GET':
-        category_obj = Category.objects.all().order_by('-created_at')
-        serializer_class = CategorySerializer(category_obj, many=True)
+        category_obj = Category.objects.all().order_by('name')
+        serializer_class = CategoryDetailSerializer(category_obj, many=True)
         
         context = {
             'status': True,

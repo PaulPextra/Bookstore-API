@@ -4,7 +4,6 @@ from cloudinary.models import CloudinaryField
 import random
 
 def generate_isbn():
-    
     """This function generates ISBN for each book"""
     
     Random_num = [str(i) for i in range(10)]
@@ -13,7 +12,10 @@ def generate_isbn():
     return ISBN
 
 class Author(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(primary_key=True, 
+                            max_length=100,
+                            unique=True)
+    
     about_author = models.TextField()
     
     class Meta:
@@ -23,11 +25,15 @@ class Author(models.Model):
         return f'{self.name}'
     
 class Book(models.Model):
-    title = models.CharField(max_length=200)
+    title = models.CharField(unique=True, 
+                             max_length=200,
+                             primary_key=True)
     
-    description = models.CharField(max_length=250)
+    description = models.TextField()
     
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    author = models.ForeignKey(Author,
+                               on_delete=models.CASCADE, 
+                               related_name='author')
     
     publisher = models.CharField(max_length=200, 
                                  null=True, 
@@ -39,7 +45,7 @@ class Book(models.Model):
                             blank=True, 
                             unique=True)
     
-    price = models.CharField(max_length=50)
+    price = models.FloatField(help_text='in Dollar ($)')
     
     created_at = models.DateTimeField(auto_now_add=True)
     
@@ -47,16 +53,14 @@ class Book(models.Model):
     
     image = CloudinaryField('image', 
                             null= True, 
-                            blank=True)
+                            blank=True,)
     
     is_active = models.BooleanField(default=True)
     
-    category = models.ForeignKey(Category, 
-                                 on_delete=models.SET_NULL, 
-                                 blank=True, 
-                                 null=True)
+    category = models.ManyToManyField(Category,
+                                      related_name='book_category')
     
-    rating = models.IntegerField(blank=True, 
+    rating = models.PositiveIntegerField(blank=True, 
                                          null=True, 
                                          default=4)
     
@@ -65,15 +69,4 @@ class Book(models.Model):
         
     def __str__(self):
         return f'{self.title}'
-    @property
-    def tag(self):
-        return self.category.name
     
-    @property
-    def author_name(self):
-        return self.author.name
-    
-    
-    
-
-

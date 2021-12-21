@@ -1,5 +1,5 @@
 from .serializers import OrderSerializer
-from .models import Order
+from .models import Order, order_no
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
@@ -8,8 +8,10 @@ from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import get_user_model
 from drf_yasg.utils import swagger_auto_schema
+from bookstore.models import Book
 
 User = get_user_model()
+
 
 @swagger_auto_schema(methods=['POST'], request_body=OrderSerializer())
 @api_view(['GET','POST'])
@@ -18,12 +20,7 @@ User = get_user_model()
 def order_list(request):
     if request.method == 'GET':
         
-        user = request.user
-
-        if user.is_anonymous:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
-        
-        order_obj = Order.objects.all().order_by('id')
+        order_obj = Order.objects.filter(user=request.user)
         
         serializer_class = OrderSerializer(order_obj, many=True)
         
@@ -40,13 +37,16 @@ def order_list(request):
         
         if serializer_class.is_valid():
             
-            order = Order.objects.create(**serializer_class._validated_data)
-            order.save()
+            if 'user' in serializer_class.validated_data.keys():
+                serializer_class.validated_data.pop('user')
+                
+            order = Order.objects.create(**serializer_class._validated_data, user=request.user)
+            order_serializer = OrderSerializer(order)
             
             context = {
                 'status': True,
-                'message': 'Order placed successfully',
-                'data': serializer_class.data
+                'message': 'Successfully',
+                'data': order_serializer.data
             }
 
             return Response(context, status=status.HTTP_201_CREATED)
@@ -128,12 +128,3 @@ def order_detail(request, order_id):
         }
 
         return Response(data, status = status.HTTP_204_NO_CONTENT)
-
-
-
-
-
-
-
-
-

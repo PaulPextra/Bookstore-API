@@ -23,8 +23,7 @@ def cart(request):
         return Response(status=status.HTTP_401_UNAUTHORIZED)
     
     if request.method == 'GET':
-        
-        cart_obj = Cart.objects.all()
+        cart_obj = Cart.objects.filter(user=request.user)
         serializer_class = CartSerializer(cart_obj, many=True)
         
         context = {
@@ -39,7 +38,11 @@ def cart(request):
         serializer_class = CartSerializer(data=request.data)
         
         if serializer_class.is_valid():
-            cart = Cart.objects.create(**serializer_class.validated_data)
+            
+            if 'user' in serializer_class.validated_data.keys():
+                serializer_class.validated_data.pop('user')
+            
+            cart = Cart.objects.create(**serializer_class.validated_data, user=request.user)
             serializer = CartSerializer(cart)
             
             context = {
@@ -51,7 +54,7 @@ def cart(request):
         else:
             
             context = {
-                'status': True,
+                'status': False,
                 'error': serializer_class.errors
             }
             return Response(context, status=status.HTTP_400_BAD_REQUEST)
@@ -126,9 +129,4 @@ def cartitem(request, cart_id):
         }
 
         return Response(context, status=status.HTTP_204_NO_CONTENT)
-        
-        
-        
-        
-        
-        
+    

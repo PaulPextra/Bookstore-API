@@ -87,7 +87,8 @@ def get_user(request):
 @permission_classes([IsAuthenticated])
 def profile(request):
     
-    """Allows the logged in user to view their profile, edit or deactivate account. Do not use this view for changing password or resetting password"""
+    """Allows the logged in user to view their profile, edit or deactivate account. 
+    Do not use this view for changing password or resetting password"""
     
     try:
         user = User.objects.get(id=request.user.id, is_active=True)
