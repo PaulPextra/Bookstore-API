@@ -56,6 +56,7 @@ def update_book(request, book_title):
             'status': False,
             'message': 'Book does not exist.'
         }
+        
         return Response(context, status=status.HTTP_400_BAD_REQUEST)
     
     if request.method == 'GET':
@@ -72,9 +73,9 @@ def update_book(request, book_title):
     
     elif request.method == 'PUT':
         
-        serializer_class = BookSerializer(book_obj, 
-                                                data=request.data, 
-                                                partial=True)
+        serializer_class = BookSerializer(book_obj,
+                                          data=request.data,
+                                          partial=True)
         
         if serializer_class.is_valid():
             
@@ -106,7 +107,7 @@ def update_book(request, book_title):
             'message' : 'Deleted Successfully'
         }
 
-        return Response(data, status = status.HTTP_204_NO_CONTENT)
+        return Response(data, status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['GET'])
@@ -182,7 +183,7 @@ def search_by_category(request, category):
 @api_view(['GET'])
 def search_by_author(request, book_author):
     try:
-        book_obj = Book.objects.filter(author__name=book_author)
+        book_obj = Book.objects.get(author=book_author)
         
     except Book.DoesNotExist:
         

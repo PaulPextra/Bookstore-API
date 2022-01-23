@@ -64,10 +64,10 @@ def order_list(request):
 @api_view(['GET', 'DELETE'])
 @authentication_classes([BasicAuthentication])
 @permission_classes([IsAuthenticated])           
-def order_detail(request, order_id):
+def order_detail(request, order_no):
     
     try:
-        order_obj = Order.objects.get(id=order_id)
+        order_obj = Order.objects.get(order_no=order_no)
     
     except Order.DoesNotExist:
         
