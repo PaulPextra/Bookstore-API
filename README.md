@@ -10,3 +10,6 @@ The user should be able to create and add books to their cart and also perform o
 
 **Author: Paul Okoli**
 [Linkedin Profile](https://www.linkedin.com/in/paulokoli/)
+
+**Bookstore E-commerce API**
+[Live Preview](https://px-bookstore-api.herokuapp.com/)
